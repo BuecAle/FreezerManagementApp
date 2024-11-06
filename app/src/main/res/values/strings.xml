@@ -1,0 +1,10 @@
+<!-- res/values/strings.xml -->
+<resources>
+    <string name="app_name">Freezer Management App</string>
+    <string-array name="unit_options">
+        <item>Gramm</item>
+        <item>Milliliter</item>
+        <item>Packung</item>
+        <item>Stück</item>
+    </string-array>
+</resources>

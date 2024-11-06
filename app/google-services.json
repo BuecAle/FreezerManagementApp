@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "432757130249",
+    "firebase_url": "https://freezerstock-895fb-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "freezerstock-895fb",
+    "storage_bucket": "freezerstock-895fb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432757130249:android:da42762c45b717dccce4d8",
+        "android_client_info": {
+          "package_name": "com.example.freezerstock"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-8NOy3z-6dnebncqUI6qifxPRv_Fr_A4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
