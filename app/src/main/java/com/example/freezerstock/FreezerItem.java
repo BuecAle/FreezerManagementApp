@@ -1,5 +1,8 @@
 package com.example.freezerstock;
 
+import java.util.HashMap;
+import java.util.Map;
+
 // FreezerItem.java
 public class FreezerItem {
     private String id;
@@ -25,4 +28,14 @@ public class FreezerItem {
     public void setName(String name) { this.name = name; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
     public void setUnit(String unit) { this.unit = unit; }
+
+    // Method to convert the FreezerItem object to a Map
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("name", name);
+        map.put("quantity", quantity);
+        map.put("unit", unit);
+        return map;
+    }
 }

@@ -1,6 +1,6 @@
 <!-- res/values/colors.xml -->
 <resources>
-    <color name="selected_item_background">#FFDDDD</color>
+    <color name="selected_item_background">#cdf7da</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 </resources>

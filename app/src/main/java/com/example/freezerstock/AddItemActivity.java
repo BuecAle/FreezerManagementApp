@@ -47,13 +47,18 @@ public class AddItemActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter a valid quantity.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if (quantity <= 0) {
+            Toast.makeText(this, "Quantity must be greater than zero.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         String unit = unitSpinner.getSelectedItem().toString();
 
         // Generate a unique ID for the new item
-        String id = db.collection("freezer_items").document().getId();
+        String id = db.collection(Constants.FREEZER_ITEMS).document().getId();
         FreezerItem newItem = new FreezerItem(id, name, quantity, unit);
 
-        db.collection("freezer_items").document(id).set(newItem)
+        db.collection(Constants.FREEZER_ITEMS).document(id).set(newItem.toMap())
                 .addOnSuccessListener(aVoid -> {
                 Toast.makeText(AddItemActivity.this, "Item saved", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
