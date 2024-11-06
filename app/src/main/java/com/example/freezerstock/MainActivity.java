@@ -3,20 +3,24 @@ package com.example.freezerstock;
 // MainActivity.java
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private ListView itemListView;
-    private Button addButton, editButton, deleteButton;
     private FirebaseFirestore db;
     private List<FreezerItem> itemList;
     private FreezerItemAdapter adapter;
@@ -28,10 +32,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         db = FirebaseFirestore.getInstance();
-        itemListView = findViewById(R.id.itemListView);
-        addButton = findViewById(R.id.addButton);
-        editButton = findViewById(R.id.editButton);
-        deleteButton = findViewById(R.id.deleteButton);
+        ListView itemListView = findViewById(R.id.itemListView);
+        Button addButton = findViewById(R.id.addButton);
+        Button editButton = findViewById(R.id.editButton);
+        Button deleteButton = findViewById(R.id.deleteButton);
 
         itemList = new ArrayList<>();
         adapter = new FreezerItemAdapter(this, itemList);
@@ -52,9 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         editButton.setOnClickListener(v -> {
             if (selectedItem != null) {
-                Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
-                intent.putExtra("itemId", selectedItem.getId());
-                startActivity(intent);
+                showEditItemDialog(selectedItem);  // Open edit dialog instead of new activity
             }
         });
 
@@ -91,5 +93,44 @@ public class MainActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
             Toast.makeText(MainActivity.this, "Item deleted", Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> Toast.makeText(MainActivity.this, "Failed to delete item", Toast.LENGTH_SHORT).show());
+    }
+
+    // Show a dialog for editing the selected item's quantity and unit
+    private void showEditItemDialog(FreezerItem item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_edit_item, null);
+        builder.setView(dialogView);
+
+        EditText quantityEditText = dialogView.findViewById(R.id.editQuantityEditText);
+        Spinner unitSpinner = dialogView.findViewById(R.id.editUnitSpinner);
+
+        quantityEditText.setText(String.valueOf(item.getQuantity()));
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.unit_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unitSpinner.setAdapter(adapter);
+
+        // Set the spinner to the current unit
+        int spinnerPosition = adapter.getPosition(item.getUnit());
+        unitSpinner.setSelection(spinnerPosition);
+
+        builder.setTitle("Edit Item")
+                .setPositiveButton("Save", (dialog, which) -> {
+                    int newQuantity = Integer.parseInt(quantityEditText.getText().toString());
+                    String newUnit = unitSpinner.getSelectedItem().toString();
+
+                    item.setQuantity(newQuantity);
+                    item.setUnit(newUnit);
+                    db.collection("freezer_items").document(item.getId())
+                            .set(item)
+                            .addOnSuccessListener(aVoid -> loadItems())  // Refresh the table
+                            .addOnFailureListener(e -> Log.e("MainActivity", "Error updating item", e));
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

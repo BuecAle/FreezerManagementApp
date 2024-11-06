@@ -1,26 +1,19 @@
-<!-- res/layout/activity_edit_item.xml -->
+<!-- res/layout/dialog_edit_item.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/quantityEditText"
+        android:id="@+id/editQuantityEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
         android:hint="Quantity" />
 
     <Spinner
-        android:id="@+id/unitSpinner"
+        android:id="@+id/editUnitSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Save" />
 </LinearLayout>
