@@ -16,11 +16,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    // Constants
+    private static final int ADD_ITEM_REQUEST_CODE = 1;
+
     private FirebaseFirestore db;
     private List<FreezerItem> itemList;
     private FreezerItemAdapter adapter;
@@ -52,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
             adapter.setSelectedPosition(position);  // Highlight the selected item
         });
 
-        addButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, AddItemActivity.class)));
+        addButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
+            startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
+        });
 
         editButton.setOnClickListener(v -> {
             if (selectedItem != null) {
@@ -65,6 +72,15 @@ public class MainActivity extends AppCompatActivity {
                 confirmDelete(selectedItem);
             }
         });
+    }
+
+    // Handle result from AddItemActivity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == RESULT_OK) {
+            loadItems();  // Refresh the item list after adding a new item
+        }
     }
 
     private void loadItems() {
